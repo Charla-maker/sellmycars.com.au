@@ -1,12 +1,9 @@
+import Link from "next/link";
 import { MapPin, Phone, Clock, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { locationsData } from "@/data/locations";
 
-type ModernLocationsProps = {
-  onLocationClick: (locationId: string) => void;
-};
-
-export const ModernLocations = ({ onLocationClick }: ModernLocationsProps) => {
+export const ModernLocations = () => {
   const extendedAreas = [
     {
       region: "Central Coast",
@@ -95,10 +92,10 @@ export const ModernLocations = ({ onLocationClick }: ModernLocationsProps) => {
           </h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {locationsData.map((area) => (
-              <button
+              <Link
                 key={area.id}
-                onClick={() => onLocationClick(area.id)}
-                className="text-left bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border border-gray-100"
+                href={`/locations/${area.id}`}
+                className="block text-left bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border border-gray-100"
               >
                 <div className="relative h-48 overflow-hidden">
                   <img
@@ -154,7 +151,7 @@ export const ModernLocations = ({ onLocationClick }: ModernLocationsProps) => {
                     </span>
                   </div>
                 </div>
-              </button>
+              </Link>
             ))}
           </div>
         </div>
