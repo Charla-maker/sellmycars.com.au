@@ -1,5 +1,5 @@
 import { NextRequest } from "next/server"
-import { getServerSession } from "next-auth"
+import { getServerSession } from "next-auth/next"
 import { prisma } from "@/lib/prisma"
 import { authOptions } from "@/lib/auth"
 import { createPageSchema } from "@/lib/validations"

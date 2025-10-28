@@ -1,11 +1,11 @@
-import { NextAuthOptions } from "next-auth"
+import type { AuthOptions } from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
 import { PrismaAdapter } from "@auth/prisma-adapter"
 import { compare } from "bcryptjs"
 import { prisma } from "./prisma"
 import type { Adapter } from "next-auth/adapters"
 
-export const authOptions: NextAuthOptions = {
+export const authOptions: AuthOptions = {
   adapter: PrismaAdapter(prisma) as Adapter,
   session: {
     strategy: "jwt",
@@ -75,14 +75,14 @@ export const authOptions: NextAuthOptions = {
     })
   ],
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user }: any) {
       if (user) {
         token.id = user.id
         token.role = user.role
       }
       return token
     },
-    async session({ session, token }) {
+    async session({ session, token }: any) {
       if (session.user) {
         session.user.id = token.id as string
         session.user.role = token.role as string
@@ -96,10 +96,10 @@ export const authOptions: NextAuthOptions = {
 // Helper function to check if user has required role
 export function hasRole(userRole: string, requiredRole: string | string[]): boolean {
   const roles = Array.isArray(requiredRole) ? requiredRole : [requiredRole]
-  const roleHierarchy = { ADMIN: 3, EDITOR: 2, VIEWER: 1 }
+  const roleHierarchy: Record<string, number> = { ADMIN: 3, EDITOR: 2, VIEWER: 1 }
 
-  const userLevel = roleHierarchy[userRole as keyof typeof roleHierarchy] || 0
-  const requiredLevel = Math.min(...roles.map(r => roleHierarchy[r as keyof typeof roleHierarchy] || 0))
+  const userLevel = roleHierarchy[userRole] || 0
+  const requiredLevel = Math.min(...roles.map(r => roleHierarchy[r] || 0))
 
   return userLevel >= requiredLevel
 }
